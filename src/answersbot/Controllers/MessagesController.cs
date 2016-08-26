@@ -34,7 +34,7 @@ namespace answersbot.Controllers
             switch (user.Session.State)
             {
                 case Models.SessionState.FirstAccess:
-                    //Send a initial message
+                    //Send a initial message and change user state to "Starting"
                     break;
                 case Models.SessionState.Starting:
                     //Handle to question or to answer action
