@@ -13,6 +13,7 @@ using Lime.Protocol.Serialization.Newtonsoft;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using SessionState = answersbot.Models.SessionState;
+using System.Threading;
 
 namespace answersbot.Controllers
 {
@@ -62,6 +63,49 @@ namespace answersbot.Controllers
                 };
 
                 await webClientService.SendMessageAsync(mediaLink, Node.Parse(to));
+
+                Thread.Sleep(100);
+
+                var select = new Select
+                {
+                    Text = $"Selecione uma das opções:",
+                    Options = new[]
+                            {
+                                new SelectOption
+                                {
+                                    Text = "0",
+                                    Value = new PlainText { Text = "0" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "2",
+                                    Value = new PlainText { Text = "2" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "4",
+                                    Value = new PlainText { Text = "4" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "6",
+                                    Value = new PlainText { Text = "6" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "8",
+                                    Value = new PlainText { Text = "8" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "10",
+                                    Value = new PlainText { Text = "10" }
+                                },
+                            }
+
+                };
+
+                await webClientService.SendMessageAsync(select, Node.Parse(to));
 
                 //2 - change user state
                 await ChangeUserStateAsync(user, Models.SessionState.Answering, "sponsor");
