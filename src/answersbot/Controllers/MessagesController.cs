@@ -49,7 +49,19 @@ namespace answersbot.Controllers
             {
                 var to = messageContent.Split(' ')[1];
                 //TODO: Change to Document
-                await webClientService.SendMessageAsync("[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?", Node.Parse(to));
+
+                var mediaLink = new MediaLink
+                {
+                    PreviewUri = new Uri(@"https://takenethmgomni.blob.core.windows.net/media-db/vivo_tn.jpg"),
+                    PreviewType = new MediaType(MediaType.DiscreteTypes.Image, MediaType.SubTypes.JPeg),
+                    Title = "Patrocinado",
+                    Size = 200,
+                    Text = "[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?",
+                    Type = new MediaType(MediaType.DiscreteTypes.Image, MediaType.SubTypes.JPeg),
+                    Uri = new Uri(@"https://takenethmgomni.blob.core.windows.net/media-db/vivo.jpg")
+                };
+
+                await webClientService.SendMessageAsync(mediaLink, Node.Parse(to));
                 return Ok();
             }
 
