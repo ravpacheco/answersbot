@@ -35,7 +35,7 @@ namespace answersbot.Controllers
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
-            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", Node.Parse("31992125857@0mn.io"));
+            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", message.From);
 
             return Ok();
 
@@ -114,6 +114,8 @@ namespace answersbot.Controllers
             }
 
             Console.WriteLine("Received Message");
+
+            return Ok();
         }
 
         private string ExtractQuestionIdFromAnswer(string messageContent)
