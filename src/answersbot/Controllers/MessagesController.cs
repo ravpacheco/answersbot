@@ -13,11 +13,13 @@ namespace answersbot.Controllers
 {
     public class MessagesController : ApiController
     {
+        private readonly QuestionService questionService;
         private readonly UserService userService;
         private readonly WebClientService webClientService;
 
         public MessagesController()
         {
+            questionService = new QuestionService();
             userService = new UserService();
             webClientService = new WebClientService();
         }
@@ -77,6 +79,7 @@ namespace answersbot.Controllers
                     //Handle a new question
 
                     //1 - Save sent question
+                    await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
 
                     //2 - Send "ResetMessageByQuestion" message
 
