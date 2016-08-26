@@ -97,25 +97,15 @@ namespace answersbot.Controllers
                     }
                     else
                     {
-                        //1 - Send "FallbackMessage" message
-                        await webClientService.SendMessageAsync(Strings.FallbackMessage, message.From);
-
-                        //2 - change user state
-                        await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                        //Handle a new question
+                        await RegisterQuestionAync(user, message);
                     }
 
                     break;
+                    
                 case Models.SessionState.Questioning:
                     //Handle a new question
-
-                    //1 - Save sent question
-                    await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
-
-                    //2 - Send "ResetMessageByQuestion" message
-                    await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
-
-                    //3 - change user state
-                    await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                    await RegisterQuestionAync(user, message);
 
                     break;
                 case Models.SessionState.Answering:
@@ -252,6 +242,18 @@ namespace answersbot.Controllers
         private bool UserWouldLikeSkipCurrentQuestion(string message)
         {
             return Strings.SkipQuestionActionValues.FirstOrDefault(q => q.Equals(message.ToLowerInvariant())) != null;
+        }
+
+        private async Task RegisterQuestionAync(User user, Message message)
+        {
+            //1 - Save sent question
+            await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
+
+            //2 - Send "ResetMessageByQuestion" message
+            await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
+
+            //3 - change user state
+            await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
         }
     }
 }
