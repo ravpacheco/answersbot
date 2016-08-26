@@ -52,5 +52,15 @@ namespace answersbot.Services
 
             return Task.CompletedTask;
         }
+
+        public async Task MarkQuestionAsAnswerdAsync(User user, Question question)
+        {
+            var database = DataContext.Database();
+
+            var userEntity = await GetUserAsync(user);
+
+            var questionEntity = database.Questions.First(q => q.Id == question.Id);
+            database.Questions.Remove(questionEntity);
+        }
     }
 }
