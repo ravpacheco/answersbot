@@ -109,6 +109,8 @@ namespace answersbot.Controllers
             }
 
             Console.WriteLine("Received Message");
+
+            return Ok();
         }
 
         private async Task ChangeUserStateAsync(User user, Models.SessionState newState)
