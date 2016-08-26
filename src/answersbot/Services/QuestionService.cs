@@ -42,5 +42,20 @@ namespace answersbot.Services
 
             return question;
         }
+
+        public Question AddQuestion(Question question)
+        {
+            var database = DataContext.Database();
+
+            database.Questions.Add(question);
+
+            var user = database.Users.First(u => u.Id == question.UserId);
+            database.Users.Remove(user);
+
+            user.MyQuestions.Add(question);
+            database.Users.Add(user);
+
+            return question;
+        }
     }
 }
