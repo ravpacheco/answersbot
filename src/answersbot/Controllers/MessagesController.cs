@@ -13,6 +13,7 @@ using Lime.Protocol.Serialization.Newtonsoft;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using SessionState = answersbot.Models.SessionState;
+using System.Threading;
 
 namespace answersbot.Controllers
 {
@@ -56,7 +57,66 @@ namespace answersbot.Controllers
             {
                 var to = messageContent.Split(' ')[1];
                 //TODO: Change to Document
-                await webClientService.SendMessageAsync("[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?", Node.Parse(to));
+
+                var mediaLink = new MediaLink
+                {
+                    PreviewUri = new Uri(@"https://takenethmgomni.blob.core.windows.net/media-db/vivo_tn.jpg"),
+                    PreviewType = new MediaType(MediaType.DiscreteTypes.Image, MediaType.SubTypes.JPeg),
+                    Title = "Patrocinado",
+                    Size = 200,
+                    Text = "[Patrocinado] Pergunta patrocinada!",
+                    Type = new MediaType(MediaType.DiscreteTypes.Image, MediaType.SubTypes.JPeg),
+                    Uri = new Uri(@"https://takenethmgomni.blob.core.windows.net/media-db/vivo.jpg")
+                };
+
+                await webClientService.SendMessageAsync(mediaLink, Node.Parse(to));
+
+                Thread.Sleep(100);
+
+                var select = new Select
+                {
+                    Text = $"De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?",
+                    Options = new[]
+                            {
+                                new SelectOption
+                                {
+                                    Text = "0",
+                                    Value = new PlainText { Text = "0" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "2",
+                                    Value = new PlainText { Text = "2" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "4",
+                                    Value = new PlainText { Text = "4" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "6",
+                                    Value = new PlainText { Text = "6" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "8",
+                                    Value = new PlainText { Text = "8" }
+                                },
+                                new SelectOption
+                                {
+                                    Text = "10",
+                                    Value = new PlainText { Text = "10" }
+                                },
+                            }
+
+                };
+
+                await webClientService.SendMessageAsync(select, Node.Parse(to));
+
+                //2 - change user state
+                await ChangeUserStateAsync(user, Models.SessionState.Answering, "sponsor");
+
                 return Ok();
             }
 
@@ -105,25 +165,15 @@ namespace answersbot.Controllers
                     }
                     else
                     {
-                        //1 - Send "FallbackMessage" message
-                        await webClientService.SendMessageAsync(Strings.FallbackMessage, message.From);
-
-                        //2 - change user state
-                        await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                        //Handle a new question
+                        await RegisterQuestionAync(user, message);
                     }
 
                     break;
+                    
                 case Models.SessionState.Questioning:
                     //Handle a new question
-
-                    //1 - Save sent question
-                    await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
-
-                    //2 - Send "ResetMessageByQuestion" message
-                    await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
-
-                    //3 - change user state
-                    await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                    await RegisterQuestionAync(user, message);
 
                     break;
                 case Models.SessionState.Answering:
@@ -140,6 +190,16 @@ namespace answersbot.Controllers
                     }
                     else
                     {
+                        if (user.Session.QuestionId == "sponsor")
+                        {
+                            //2.2 - Send "ResetMessageByAnswer" message
+                            await webClientService.SendMessageAsync(Strings.ResetMessageByAnswer, message.From);
+
+                            //3 - change user state
+                            await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                            break;
+                        }
+
                         var question = await questionService.GetQuestionByIdAsync(user.Session.QuestionId);
                         var questionUser = userService.GetUserByIdAsync(question.UserId);
 
@@ -260,6 +320,18 @@ namespace answersbot.Controllers
         private bool UserWouldLikeSkipCurrentQuestion(string message)
         {
             return Strings.SkipQuestionActionValues.FirstOrDefault(q => q.Equals(message.ToLowerInvariant())) != null;
+        }
+
+        private async Task RegisterQuestionAync(User user, Message message)
+        {
+            //1 - Save sent question
+            await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
+
+            //2 - Send "ResetMessageByQuestion" message
+            await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
+
+            //3 - change user state
+            await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
         }
     }
 }
