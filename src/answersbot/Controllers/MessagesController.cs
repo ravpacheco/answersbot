@@ -38,8 +38,9 @@ namespace answersbot.Controllers
 
             if (SponsorCommand(messageContent))
             {
+                var to = messageContent.Split(' ')[1];
                 //TODO: Change to Document
-                await webClientService.SendMessageAsync("[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?", message.From);
+                await webClientService.SendMessageAsync("[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?", Node.Parse(to));
                 return Ok();
             }
 
