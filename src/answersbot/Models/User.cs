@@ -15,6 +15,8 @@ namespace answersbot.Models
         public User()
         {
             Id = Guid.NewGuid();
+            MyAnswers = new List<Answer>();
+            MyQuestions = new List<Question>();
         }
     }
 }

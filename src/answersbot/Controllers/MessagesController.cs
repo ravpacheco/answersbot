@@ -99,8 +99,10 @@ namespace answersbot.Controllers
                     }
                     else
                     {
-                        //2.1 - Send to question's user owner this answer
+                        var questionId = ExtractQuestionIdFromAnswer(messageContent);
 
+                        //2.1 - Send to question's user owner this answer
+                        await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = questionId});
 
                         //2.2 - Send "ResetMessageByAnswer" message
 
@@ -114,10 +116,15 @@ namespace answersbot.Controllers
             Console.WriteLine("Received Message");
         }
 
+        private string ExtractQuestionIdFromAnswer(string messageContent)
+        {
+            throw new NotImplementedException();
+        }
+
         private async Task ChangeUserStateAsync(User user, Models.SessionState newState)
         {
             user.Session.State = newState;
-            await userService.UpdateUserAsync(user);
+            await userService.UpdateUserSessionAsync(user);
         }
 
         private bool UserWouldLikeQuestion(string message)

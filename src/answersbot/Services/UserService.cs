@@ -38,20 +38,37 @@ namespace answersbot.Services
             return userEntity;
         }
 
-        public Task UpdateUserAsync(User user)
+        public Task UpdateUserSessionAsync(User user)
         {
             var database = DataContext.Database();
 
             var userEntity = database.Users.First(u => u.Node.Name == user.Node.Name);
             database.Users.Remove(userEntity);
 
-            if (user != null)
-            {
-                database.Users.Add(user);
+            if (user.Session != null) { 
+                userEntity.Session = user.Session;
+                database.Users.Add(userEntity);
             }
 
             return Task.CompletedTask;
         }
+
+        public Task UpdateUserAnswersAsync(User user, Answer answer)
+        {
+            var database = DataContext.Database();
+
+            var userEntity = database.Users.First(u => u.Node.Name == user.Node.Name);
+            database.Users.Remove(userEntity);
+
+            if (answer != null)
+            {
+                userEntity.MyAnswers.Add(answer);
+                database.Users.Add(userEntity);
+            }
+
+            return Task.CompletedTask;
+        }
+
 
         public async Task MarkQuestionAsAnswerdAsync(User user, Question question)
         {
