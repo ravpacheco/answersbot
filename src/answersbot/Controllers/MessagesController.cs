@@ -57,7 +57,7 @@ namespace answersbot.Controllers
                     PreviewType = new MediaType(MediaType.DiscreteTypes.Image, MediaType.SubTypes.JPeg),
                     Title = "Patrocinado",
                     Size = 200,
-                    Text = "[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?",
+                    Text = "[Patrocinado] Pergunta patrocinada!",
                     Type = new MediaType(MediaType.DiscreteTypes.Image, MediaType.SubTypes.JPeg),
                     Uri = new Uri(@"https://takenethmgomni.blob.core.windows.net/media-db/vivo.jpg")
                 };
@@ -68,7 +68,7 @@ namespace answersbot.Controllers
 
                 var select = new Select
                 {
-                    Text = $"Selecione uma das opções:",
+                    Text = $"De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?",
                     Options = new[]
                             {
                                 new SelectOption
