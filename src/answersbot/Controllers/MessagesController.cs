@@ -33,6 +33,13 @@ namespace answersbot.Controllers
 
             var messageContent = message.Content.ToString();
 
+            if (SponsorCommand(messageContent))
+            {
+                //TODO: Change to Document
+                await webClientService.SendMessageAsync("[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?", message.From);
+                return Ok();
+            }
+
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
             await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", message.From);
@@ -116,6 +123,11 @@ namespace answersbot.Controllers
             Console.WriteLine("Received Message");
 
             return Ok();
+        }
+
+        private bool SponsorCommand(string messageContent)
+        {
+            return messageContent.Contains("/patrocinado/");
         }
 
         private string ExtractQuestionIdFromAnswer(string messageContent)
