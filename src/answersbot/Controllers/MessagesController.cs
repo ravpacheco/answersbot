@@ -62,6 +62,10 @@ namespace answersbot.Controllers
                 };
 
                 await webClientService.SendMessageAsync(mediaLink, Node.Parse(to));
+
+                //2 - change user state
+                await ChangeUserStateAsync(user, Models.SessionState.Answering, "sponsor");
+
                 return Ok();
             }
 
@@ -134,6 +138,16 @@ namespace answersbot.Controllers
                     }
                     else
                     {
+                        if (user.Session.QuestionId == "sponsor")
+                        {
+                            //2.2 - Send "ResetMessageByAnswer" message
+                            await webClientService.SendMessageAsync(Strings.ResetMessageByAnswer, message.From);
+
+                            //3 - change user state
+                            await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                            break;
+                        }
+
                         var question = await questionService.GetQuestionByIdAsync(user.Session.QuestionId);
                         var questionUser = userService.GetUserByIdAsync(question.UserId);
 
