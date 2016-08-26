@@ -36,7 +36,14 @@ namespace answersbot.Controllers
 
             var message = JsonConvert.DeserializeObject<Message>(jsonObject.ToString(), JsonNetSerializer.Settings);
 
-            var messageContent = message.Content.ToString();
+            var plainText = message.Content as PlainText;
+            if (plainText == null)
+            {
+                await webClientService.SendMessageAsync(Strings.FallbackMessage, message.From);
+                return Ok();
+            }
+
+            var messageContent = plainText.Text;
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
@@ -58,7 +65,7 @@ namespace answersbot.Controllers
             {
                 questionService.CloseQuestion(questionId);
 
-                await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
+                await webClientService.SendMessageAsync(Strings.ResetMessageByClosing, message.From);
 
                 await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
                 return Ok();
@@ -136,7 +143,7 @@ namespace answersbot.Controllers
                         var questionUser = userService.GetUserByIdAsync(question.UserId);
 
                         //2.1 - Send to question's user owner this answer
-                        await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = question.Id});
+                        await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = question.Id });
                         var select = new Select
                         {
                             Text = $"Pergunta: {question.Content}\nResposta: {messageContent}",

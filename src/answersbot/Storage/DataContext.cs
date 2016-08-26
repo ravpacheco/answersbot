@@ -35,27 +35,30 @@ namespace answersbot.Storage
         
         private void PopulateDataBase()
         {
-            CreateNewQuestion("225323721@telegram.gw.msging.net", "Por que a água da privada gira em sentidos diferentes no hemisfério norte e no sul?");
+            CreateNewQuestion("225323721@telegram.gw.msging.net", "Qual o melhor site para comprar eletrônicos?");
             CreateNewQuestion("5531992154087@0mn.io", "Por que kamikazes usam capacetes?");
-            CreateNewQuestion("5531992125857@0mn.io", "Por que os filmes de batalha espaciais tem explosões tão barulhentas, se o som não se propaga no vácuo?");
+            CreateNewQuestion("5531992125857@0mn.io", "É confiável comprar um iphone 6 no mercado livre por 1.969 reais?");
             CreateNewQuestion("5531998271039@0mn.io", "Qual dos braços da poltrona do cinema é o da sua cadeira?");
 
-            CreateNewQuestion("1414594858555994@messenger.gw.msging.net", "Qual o sentido da vida do universo e tudo mais?");
-            CreateNewQuestion("5531992154087@0mn.io", "Se você cavar um buraco até o centro da Terra e pular, você permanece no centro por causa da gravidade ou volta para a superfície?");
+            CreateNewQuestion("1414594858555994@messenger.gw.msging.net", "O que você faria se descobrisse que seu amigo(a) é homossexual?");
+            CreateNewQuestion("5531992125857@0mn.io", "O que você faria se descobrisse que seu amigo(a) usa Crocs?");
+            CreateNewQuestion("5531992154087@0mn.io", "Como falar à um colega de trabalho que ele tem cc?");
             CreateNewQuestion("5531992125857@0mn.io", "Por que quando ligamos para um número errado nunca dá ocupado?");
             CreateNewQuestion("5531998271039@0mn.io", "Por que a fila do lado sempre parece andar mais rápido?");
 
-            CreateNewQuestion("1414594858555994@messenger.gw.msging.net", "Se a ciência consegue desvendar até os mistérios do DNA, porque ninguém descobriu ainda a fórmula da Coca-Cola?");
-            CreateNewQuestion("5531992154087@0mn.io", "Por que os aviões não são fabricados com o mesmo material usado nas suas caixas pretas?");
-            CreateNewQuestion("5531992125857@0mn.io", "Por que as pessoas apertam o controle remoto com mais força, quando a pilha está fraca?");
-            CreateNewQuestion("5531998271039@0mn.io", "Seu pai tem boi?");
+            CreateNewQuestion("1414594858555994@messenger.gw.msging.net", "Qual a melhor raça de cachorro para crianças?");
+            CreateNewQuestion("5531992154087@0mn.io", "Qual o melhor bar em Belo Horizonte para comemorar aniversário?");
+            CreateNewQuestion("5531992125857@0mn.io", "Qual o melhor lugar para morar em Belo Horizonte?");
+            CreateNewQuestion("5531998271039@0mn.io", "O que é melhor? Gato ou Cachorro?");
 
-            CreateNewQuestion("225323721@telegram.gw.msging.net", "O Paulo é pai de gêmeas?");
-            CreateNewQuestion("5531992154087@0mn.io", "A Letícia fala muito?");
+            CreateNewQuestion("225323721@telegram.gw.msging.net", "Qual o maior time de Minas Gerais? Atlético ou Cruzeiro?");
+            CreateNewQuestion("5531992154087@0mn.io", "Na sua humilde opinião, a Letícia fala muito?");
             CreateNewQuestion("5531992125857@0mn.io", "Por que quando ligamos para um número errado nunca dá ocupado?");
-            CreateNewQuestion("5531998271039@0mn.io", "O Romão não come invertebrados?");
-        }
+            CreateNewQuestion("5531998271039@0mn.io", "Qual o último livro que você leu? Você o recomendaria?");
 
+            CreateNewQuestion("1414594858555994@messenger.gw.msging.net", "Qual o último filme que você assistiu? Você o recomendaria?");
+            CreateNewQuestion("5531992154087@0mn.io", "Qual seu estilo de música preferido?");
+        }
 
         private void CreateNewQuestion(string user, string question)
         {
