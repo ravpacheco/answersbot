@@ -37,6 +37,8 @@ namespace answersbot.Controllers
 
             var messageContent = message.Content.ToString();
 
+            var user = await userService.GetUserAsync(new User { Node = message.From });
+
             if (SponsorCommand(messageContent))
             {
                 var to = messageContent.Split(' ')[1];
@@ -44,13 +46,17 @@ namespace answersbot.Controllers
                 await webClientService.SendMessageAsync("[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?", Node.Parse(to));
                 return Ok();
             }
-            else if(ExtractQuestionIdFromAnswer(messageContent) != null)
-            {
-                var questionId = ExtractQuestionIdFromAnswer(messageContent);
-                questionService.CloseQuestion(questionId);
-            }
 
-            var user = await userService.GetUserAsync(new User { Node = message.From });
+            var questionId = ExtractQuestionIdFromAnswer(messageContent);
+            if (questionId != null)
+            {
+                questionService.CloseQuestion(questionId);
+
+                await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
+
+                await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                return Ok();
+            }
 
             switch (user.Session.State)
             {
