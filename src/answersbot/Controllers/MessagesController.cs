@@ -11,6 +11,7 @@ using Lime.Messaging.Contents;
 using Lime.Protocol;
 using Lime.Protocol.Serialization.Newtonsoft;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace answersbot.Controllers
 {
@@ -183,7 +184,10 @@ namespace answersbot.Controllers
 
         private string ExtractQuestionIdFromAnswer(string messageContent)
         {
-            throw new NotImplementedException();
+            var pattern = new Regex(@"#(?<questionId>\d+)#");
+            var match = pattern.Match(messageContent);
+            var questionId = match.Groups["questionId"].Value;
+            return questionId;
         }
 
         private async Task ChangeUserStateAsync(User user, Models.SessionState newState)
