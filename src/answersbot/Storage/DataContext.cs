@@ -1,4 +1,5 @@
 ﻿using answersbot.Models;
+using answersbot.Services;
 using Lime.Messaging.Contents;
 using Lime.Protocol;
 using System;
@@ -62,15 +63,21 @@ namespace answersbot.Storage
             newUser.Node = Node.Parse(user);
             newUser.Session = new Models.Session { State = Models.SessionState.FirstAccess };
 
+            var userService = new UserService();
+            var questionService = new QuestionService();
+
+            newUser = userService.GetUser(newUser);
+
             Question newQuestion = new Question();
             newQuestion.Content = new PlainText() { Text = question };
             newQuestion.UserId = newUser.Id;
 
-            newUser.MyQuestions.Add(newQuestion);
+            questionService.AddQuestion(newQuestion);
 
-            _database.Users.Add(newUser);
-            _database.Questions.Add(newQuestion);
         }
+
+
+
 
 
     }
