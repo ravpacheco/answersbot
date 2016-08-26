@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Web;
 using Lime.Messaging.Contents;
 using Lime.Protocol;
+using Lime.Protocol.Serialization.Newtonsoft;
+using Newtonsoft.Json;
 
 namespace answersbot.Services
 {
@@ -19,21 +21,24 @@ namespace answersbot.Services
 
         private AuthenticationHeaderValue AuthorizationHeader { get; set; }
 
-        public async Task<HttpResponseMessage> SendMessageAsync(string payload, Node to, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpResponseMessage> SendMessageAsync(string text, Node to, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await SendMessageAsync(new PlainText { Text = payload }, to, cancellationToken);
+            return await SendMessageAsync(new PlainText { Text = text }, to, cancellationToken);
         }
 
-        public async Task<HttpResponseMessage> SendMessageAsync<T>(T payload, Node to, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpResponseMessage> SendMessageAsync<T>(T document, Node to, CancellationToken cancellationToken = default(CancellationToken))
             where T : Document
         {
             SetAuthorization(new AuthenticationHeaderValue("Basic", "cmF2cGFjaGVjb0BnbWFpbC5jb206bVI0ZjQzbGFwMQ=="));
-            return await SendAsync(Uri, HttpMethod.Post, new Message {
+            var message = new Message
+            {
                 Id = Guid.NewGuid().ToString(),
-                Content = payload,
+                Content = document,
                 From = Node.Parse("answersbot@msging.net"),
                 To = to
-            }, cancellationToken);
+            };
+            var payload = JsonConvert.SerializeObject(message, JsonNetSerializer.Settings);
+            return await SendAsync(Uri, HttpMethod.Post, payload, cancellationToken);
         }
 
         private void SetAuthorization(AuthenticationHeaderValue header)
@@ -76,7 +81,7 @@ namespace answersbot.Services
 
                     await TraceResponseDataAsync(response);
 
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    if (response.IsSuccessStatusCode)
                         return response;
 
                     throw new HttpException((int)response.StatusCode, response.ReasonPhrase);

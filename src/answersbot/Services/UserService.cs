@@ -37,5 +37,30 @@ namespace answersbot.Services
             
             return userEntity;
         }
+
+        public Task UpdateUserAsync(User user)
+        {
+            var database = DataContext.Database();
+
+            var userEntity = database.Users.First(u => u.Node.Name == user.Node.Name);
+            database.Users.Remove(userEntity);
+
+            if (user != null)
+            {
+                database.Users.Add(user);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public async Task MarkQuestionAsAnswerdAsync(User user, Question question)
+        {
+            var database = DataContext.Database();
+
+            var userEntity = await GetUserAsync(user);
+
+            var questionEntity = database.Questions.First(q => q.Id == question.Id);
+            database.Questions.Remove(questionEntity);
+        }
     }
 }
