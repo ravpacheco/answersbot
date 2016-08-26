@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Lime.Messaging.Contents;
 using Lime.Protocol;
 using Lime.Protocol.Serialization.Newtonsoft;
 using Newtonsoft.Json;
@@ -35,16 +36,30 @@ namespace answersbot.Controllers
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
-            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", message.From);
-
-            return Ok();
-
             switch (user.Session.State)
             {
                 case Models.SessionState.FirstAccess:
                     //Send a initial message and change user state to "Starting"
 
                     //1 - Send a initial message
+                    var select = new Select
+                    {
+                        Text = Strings.FirstMessage,
+                        Options = new[]
+                        {
+                            new SelectOption
+                            {
+                                Order = 1,
+                                Text = Strings.QuestionActionText
+                            },
+                            new SelectOption
+                            {
+                                Order = 2,
+                                Text = Strings.AnswerActionText
+                            }
+                        }
+                    };
+                    await webClientService.SendMessageAsync(select, message.From);
 
                     //2 - change user state
                     await ChangeUserStateAsync(user, Models.SessionState.Starting);
@@ -56,6 +71,7 @@ namespace answersbot.Controllers
                     if (UserWouldLikeQuestion(messageContent))
                     {
                         //1 - Send "SendQuestion" message
+
 
                         //2 - change user state
                         await ChangeUserStateAsync(user, Models.SessionState.Questioning);
