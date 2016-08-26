@@ -24,7 +24,7 @@ namespace answersbot.Resources
         public static string[] QuestionActionValues = { "perguntar", "pergunta", "p", "/perguntar", "/pergunta", "p", "1" };
         public static string AnswerActionText = "Responder";
         public static string[] AnswerActionValues = { "responder", "resposta", "r", "/responder", "/responsta", "r", "2" };
-        public static string StartActionText = "Começar";
+        public static string[] StartActionValues = { "oi", "início", "inicio", "/start", "comecar", "começar", "iniciar" };
 
         public static string SkipQuestionActionText = "outra";
         public static string[] SkipQuestionActionValues = { "pular", "outra", "outra pergunta", "quero outra pergunta" };

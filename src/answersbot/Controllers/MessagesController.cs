@@ -12,6 +12,7 @@ using Lime.Protocol;
 using Lime.Protocol.Serialization.Newtonsoft;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using SessionState = answersbot.Models.SessionState;
 
 namespace answersbot.Controllers
 {
@@ -39,6 +40,11 @@ namespace answersbot.Controllers
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
+            if (Strings.StartActionValues.Contains(messageContent) && user.Session.State != SessionState.Answering)
+            {
+                await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+            }
+
             if (SponsorCommand(messageContent))
             {
                 var to = messageContent.Split(' ')[1];
@@ -48,7 +54,7 @@ namespace answersbot.Controllers
             }
 
             var questionId = ExtractQuestionIdFromAnswer(messageContent);
-            if (questionId != null)
+            if (!string.IsNullOrEmpty(questionId))
             {
                 questionService.CloseQuestion(questionId);
 
