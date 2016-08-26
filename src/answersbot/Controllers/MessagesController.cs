@@ -44,6 +44,11 @@ namespace answersbot.Controllers
                 await webClientService.SendMessageAsync("[Patrocinado] De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?", Node.Parse(to));
                 return Ok();
             }
+            else if(ExtractQuestionIdFromAnswer(messageContent) != null)
+            {
+                var questionId = ExtractQuestionIdFromAnswer(messageContent);
+                questionService.CloseQuestion(questionId);
+            }
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
@@ -73,10 +78,10 @@ namespace answersbot.Controllers
                     else if (UserWouldLikeAnswer(messageContent))
                     {
                         //1 - Send a random question to user. Or if not exist send some default message
-                        await SendRandomQuestionOrDefaultMessageAsync(user, message);
+                        var question = await SendRandomQuestionOrDefaultMessageAsync(user, message);
 
                         //2 - change user state
-                        await ChangeUserStateAsync(user, Models.SessionState.Answering);
+                        await ChangeUserStateAsync(user, Models.SessionState.Answering, question.Id);
                     }
                     else
                     {
@@ -108,16 +113,18 @@ namespace answersbot.Controllers
                     if (UserWouldLikeSkipCurrentQuestion(messageContent))
                     {
                         //1 - Send a random question to user. Or if not exist send some default message
-                        await SendRandomQuestionOrDefaultMessageAsync(user, message);
+                        var question = await SendRandomQuestionOrDefaultMessageAsync(user, message);
+
+                        //2 - change user state
+                        await ChangeUserStateAsync(user, Models.SessionState.Answering, question.Id);
                     }
                     else
                     {
-                        var questionId = ExtractQuestionIdFromAnswer(messageContent);
-                        var question = questionService.GetQuestionByIdAsync(questionId);
+                        var question = await questionService.GetQuestionByIdAsync(user.Session.QuestionId);
                         var questionUser = userService.GetUserByIdAsync(question.UserId);
 
                         //2.1 - Send to question's user owner this answer
-                        await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = questionId});
+                        await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = question.Id});
                         var select = new Select
                         {
                             Text = messageContent,
@@ -173,7 +180,7 @@ namespace answersbot.Controllers
             await webClientService.SendMessageAsync(select, message.From);
         }
 
-        private async Task SendRandomQuestionOrDefaultMessageAsync(User user, Message message)
+        private async Task<Question> SendRandomQuestionOrDefaultMessageAsync(User user, Message message)
         {
             var randomQuestion = await questionService.GetRandomQuestion(user);
             if (randomQuestion != null)
@@ -196,6 +203,8 @@ namespace answersbot.Controllers
             {
                 await webClientService.SendMessageAsync(Strings.NoQuestionsAvailable, message.From);
             }
+
+            return randomQuestion;
         }
 
         private bool SponsorCommand(string messageContent)
@@ -211,9 +220,10 @@ namespace answersbot.Controllers
             return questionId;
         }
 
-        private async Task ChangeUserStateAsync(User user, Models.SessionState newState)
+        private async Task ChangeUserStateAsync(User user, Models.SessionState newState, string questionId = null)
         {
             user.Session.State = newState;
+            user.Session.QuestionId = questionId;
             await userService.UpdateUserSessionAsync(user);
         }
 
