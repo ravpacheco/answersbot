@@ -30,6 +30,8 @@ namespace answersbot.Controllers
         // POST api/messages
         public async Task<IHttpActionResult> Post(JObject jsonObject)
         {
+            Console.WriteLine($"Message Received: {jsonObject}");
+
             var message = JsonConvert.DeserializeObject<Message>(jsonObject.ToString(), JsonNetSerializer.Settings);
 
             var messageContent = message.Content.ToString();
@@ -42,24 +44,7 @@ namespace answersbot.Controllers
                     //Send a initial message and change user state to "Starting"
 
                     //1 - Send a initial message
-                    var select = new Select
-                    {
-                        Text = Strings.FirstMessage,
-                        Options = new[]
-                        {
-                            new SelectOption
-                            {
-                                Order = 1,
-                                Text = Strings.QuestionActionText
-                            },
-                            new SelectOption
-                            {
-                                Order = 2,
-                                Text = Strings.AnswerActionText
-                            }
-                        }
-                    };
-                    await webClientService.SendMessageAsync(select, message.From);
+                    await SendInitialMenuAsync(message);
 
                     //2 - change user state
                     await ChangeUserStateAsync(user, Models.SessionState.Starting);
@@ -71,7 +56,7 @@ namespace answersbot.Controllers
                     if (UserWouldLikeQuestion(messageContent))
                     {
                         //1 - Send "SendQuestion" message
-
+                        await webClientService.SendMessageAsync(Strings.SendQuestion, message.From);
 
                         //2 - change user state
                         await ChangeUserStateAsync(user, Models.SessionState.Questioning);
@@ -79,6 +64,7 @@ namespace answersbot.Controllers
                     else if (UserWouldLikeAnswer(messageContent))
                     {
                         //1 - Send a random question to user. Or if not exist send some default message
+                        await SendRandomQuestionOrDefaultMessageAsync(user, message);
 
                         //2 - change user state
                         await ChangeUserStateAsync(user, Models.SessionState.Answering);
@@ -86,6 +72,7 @@ namespace answersbot.Controllers
                     else
                     {
                         //1 - Send "FallbackMessage" message
+                        await webClientService.SendMessageAsync(Strings.FallbackMessage, message.From);
 
                         //2 - change user state
                         await ChangeUserStateAsync(user, Models.SessionState.Starting);
@@ -99,6 +86,7 @@ namespace answersbot.Controllers
                     await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
 
                     //2 - Send "ResetMessageByQuestion" message
+                    await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
 
                     //3 - change user state
                     await ChangeUserStateAsync(user, Models.SessionState.Starting);
@@ -111,7 +99,7 @@ namespace answersbot.Controllers
                     if (UserWouldLikeSkipCurrentQuestion(messageContent))
                     {
                         //1 - Send a random question to user. Or if not exist send some default message
-
+                        await SendRandomQuestionOrDefaultMessageAsync(user, message);
                     }
                     else
                     {
@@ -121,6 +109,7 @@ namespace answersbot.Controllers
                         await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = questionId});
 
                         //2.2 - Send "ResetMessageByAnswer" message
+                        await webClientService.SendMessageAsync(Strings.ResetMessageByAnswer, message.From);
 
                         //3 - change user state
                         await ChangeUserStateAsync(user, Models.SessionState.Starting);
@@ -129,9 +118,54 @@ namespace answersbot.Controllers
                     break;
             }
 
-            Console.WriteLine("Received Message");
-
             return Ok();
+        }
+
+        private async Task SendInitialMenuAsync(Message message)
+        {
+            var select = new Select
+            {
+                Text = Strings.FirstMessage,
+                Options = new[]
+                {
+                    new SelectOption
+                    {
+                        Order = 1,
+                        Text = Strings.QuestionActionText
+                    },
+                    new SelectOption
+                    {
+                        Order = 2,
+                        Text = Strings.AnswerActionText
+                    }
+                }
+            };
+            await webClientService.SendMessageAsync(select, message.From);
+        }
+
+        private async Task SendRandomQuestionOrDefaultMessageAsync(User user, Message message)
+        {
+            var randomQuestion = await questionService.GetRandomQuestion(user);
+            if (randomQuestion != null)
+            {
+                var select = new Select
+                {
+                    Text = randomQuestion.Content.ToString(),
+                    Options = new[]
+                    {
+                        new SelectOption
+                        {
+                            Text = Strings.SendAnotherQuestionActionText,
+                            Value = new PlainText {Text = Strings.SkipQuestionActionText}
+                        }
+                    }
+                };
+                await webClientService.SendMessageAsync(select, message.From);
+            }
+            else
+            {
+                await webClientService.SendMessageAsync(Strings.NoQuestionsAvailable, message.From);
+            }
         }
 
         private string ExtractQuestionIdFromAnswer(string messageContent)

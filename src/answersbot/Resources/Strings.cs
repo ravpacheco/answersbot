@@ -26,6 +26,8 @@ namespace answersbot.Resources
         public static string[] AnswerActionValues = { "responder", "resposta", "r", "/responder", "/responsta", "r", "2" };
         public static string StartActionText = "Começar";
 
+        public static string SkipQuestionActionText = "outra";
         public static string[] SkipQuestionActionValues = { "pular", "outra", "outra pergunta", "quero outra pergunta" };
+        public static string NoQuestionsAvailable = "Parabéns! Você respondeu todas as perguntas disponíveis!";
     }
 }
