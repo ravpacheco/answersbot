@@ -79,39 +79,24 @@ namespace answersbot.Controllers
 
                 var select = new Select
                 {
-                    Text = $"De 0 a 10 (onde 0 é nada satisfeito e 10 é totalmente satisfeito) como você considera os serviços prestados pela VIVO ?",
+                    Text = $"Como você avalia os serviços prestados pela VIVO ?",
                     Options = new[]
                             {
                                 new SelectOption
                                 {
-                                    Text = "0",
-                                    Value = new PlainText { Text = "0" }
+                                    Text = "Excelente",
+                                    Value = new PlainText { Text = "Excelente" }
                                 },
                                 new SelectOption
                                 {
-                                    Text = "2",
-                                    Value = new PlainText { Text = "2" }
+                                    Text = "Médio",
+                                    Value = new PlainText { Text = "Médio" }
                                 },
                                 new SelectOption
                                 {
-                                    Text = "4",
-                                    Value = new PlainText { Text = "4" }
-                                },
-                                new SelectOption
-                                {
-                                    Text = "6",
-                                    Value = new PlainText { Text = "6" }
-                                },
-                                new SelectOption
-                                {
-                                    Text = "8",
-                                    Value = new PlainText { Text = "8" }
-                                },
-                                new SelectOption
-                                {
-                                    Text = "10",
-                                    Value = new PlainText { Text = "10" }
-                                },
+                                    Text = "Precisa melhorar",
+                                    Value = new PlainText { Text = "Precisa melhorar" }
+                                }
                             }
 
                 };
