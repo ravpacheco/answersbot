@@ -1,30 +1,29 @@
 ﻿using answersbot.Models;
 using answersbot.Resources;
 using answersbot.Services;
-using Lime.Protocol;
 using Lime.Protocol.Serialization;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Lime.Protocol;
 
 namespace answersbot.Controllers
 {
     public class MessagesController : ApiController
     {
         private readonly UserService userService;
+        private readonly WebClientService webClientService;
 
         public MessagesController()
         {
             userService = new UserService();
+            webClientService = new WebClientService();
         }
 
-        // POST api/values
-        public async Task Post(JObject jsonObject)
+        // POST api/messages
+        public async Task<IHttpActionResult> Post(JObject jsonObject)
         {
             var envelopeSerializer = new EnvelopeSerializer();
 
@@ -32,6 +31,10 @@ namespace answersbot.Controllers
             var messageContent = message.Content.ToString();
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
+
+            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", message.From);
+
+            return Ok();
 
             switch (user.Session.State)
             {

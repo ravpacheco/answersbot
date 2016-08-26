@@ -28,7 +28,7 @@ namespace answersbot.Services
         {
             var database = DataContext.Database();
 
-            var userEntity = database.Users.First(u => u.Node.Name == user.Node.Name);
+            var userEntity = database.Users.FirstOrDefault(u => u.Node.Name == user.Node.Name);
 
             if(userEntity == null)
             {
