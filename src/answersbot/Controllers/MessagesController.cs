@@ -139,7 +139,7 @@ namespace answersbot.Controllers
                         await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = question.Id});
                         var select = new Select
                         {
-                            Text = messageContent,
+                            Text = $"Pergunta: {question.Content}\nResposta: {messageContent}",
                             Options = new[]
                             {
                                 new SelectOption
