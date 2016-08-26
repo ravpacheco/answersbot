@@ -11,9 +11,9 @@ namespace answersbot.Resources
         public static string SendQuestion = "Envie sua pergunta";
 
         public static string RestartingMessage = "Para perguntar ou responder novamente envie COMEÇAR";
-        public static string ResetMessageByClosing = "Sua pergunta foi encerrada :)\n" + RestartingMessage;
+        public static string ResetMessageByClosing = "Sua pergunta '{0}' foi encerrada. :)\n" + RestartingMessage;
         public static string ResetMessageByAnswer = "Resposta enviada :)\n" + RestartingMessage;
-        public static string ResetMessageByQuestion = "Sua pergunta foi registrada :)\nEm breve você receberá respostas.\n" + RestartingMessage;
+        public static string ResetMessageByQuestion = "Sua pergunta foi registrada. :)\nEm breve você receberá respostas.\n" + RestartingMessage;
 
         public static string FallbackMessage = "Desculpe não entendi! " + RestartingMessage;
 

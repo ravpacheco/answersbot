@@ -37,7 +37,7 @@ namespace answersbot.Storage
         {
             CreateNewQuestion("225323721@telegram.gw.msging.net", "Qual o melhor site para comprar eletrônicos?");
             CreateNewQuestion("5531992154087@0mn.io", "Por que kamikazes usam capacetes?");
-            CreateNewQuestion("5531992125857@0mn.io", "É confiável comprar um iphone 6 no mercado livre por 1.969 reais?");
+            CreateNewQuestion("5531992125857@0mn.io", "É confiável comprar um iPhone 6 no mercado livre por 1.969 reais?");
             CreateNewQuestion("5531998271039@0mn.io", "Qual dos braços da poltrona do cinema é o da sua cadeira?");
 
             CreateNewQuestion("1414594858555994@messenger.gw.msging.net", "O que você faria se descobrisse que seu amigo(a) é homossexual?");

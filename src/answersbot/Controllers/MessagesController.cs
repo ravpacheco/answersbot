@@ -65,7 +65,8 @@ namespace answersbot.Controllers
             {
                 questionService.CloseQuestion(questionId);
 
-                await webClientService.SendMessageAsync(Strings.ResetMessageByClosing, message.From);
+                var question = await questionService.GetQuestionByIdAsync(questionId);
+                await webClientService.SendMessageAsync(String.Format(Strings.ResetMessageByClosing, question.Content), message.From);
 
                 await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
                 return Ok();
@@ -233,7 +234,7 @@ namespace answersbot.Controllers
 
         private string ExtractQuestionIdFromAnswer(string messageContent)
         {
-            var pattern = new Regex(@"#(?<questionId>\d+)#");
+            var pattern = new Regex(@"#(?<questionId>.+)#");
             var match = pattern.Match(messageContent);
             var questionId = match.Groups["questionId"].Value;
             return questionId;
