@@ -6,7 +6,7 @@ namespace answersbot.Models
 {
     public class Answer
     {
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
         public Guid QuestionId { get; set; }
     }
 }
