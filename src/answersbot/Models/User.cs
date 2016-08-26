@@ -10,6 +10,7 @@ namespace answersbot.Models
         public Guid Id { get; set; }
         public Session Session { get; set; }
         public List<Question> MyQuestions { get; set; }
+        public List<Answer> MyAnswers { get; set; }
 
         public User()
         {
