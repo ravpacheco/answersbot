@@ -36,14 +36,14 @@ namespace answersbot.Controllers
 
             var message = JsonConvert.DeserializeObject<Message>(jsonObject.ToString(), JsonNetSerializer.Settings);
 
-            var plainText = message.Content as PlainText;
+            var plainText = (message.Content as PlainDocument)?.Value ?? (message.Content as PlainText)?.Text;
             if (plainText == null)
             {
                 await webClientService.SendMessageAsync(Strings.FallbackMessage, message.From);
                 return Ok();
             }
 
-            var messageContent = plainText.Text;
+            var messageContent = plainText;
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
