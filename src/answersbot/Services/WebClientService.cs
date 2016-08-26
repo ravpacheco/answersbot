@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
@@ -34,7 +33,6 @@ namespace answersbot.Services
             {
                 Id = Guid.NewGuid().ToString(),
                 Content = document,
-                From = Node.Parse("answersbot@msging.net"),
                 To = to
             };
             var payload = JsonConvert.SerializeObject(message, JsonNetSerializer.Settings);
