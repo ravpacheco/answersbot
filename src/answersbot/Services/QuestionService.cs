@@ -16,7 +16,7 @@ namespace answersbot.Services
             // 1. It is not mine question
             // 2. It is not a question that was answered by me
             var database = DataContext.Database();
-            var questions = database.Questions.Where(q => q.UserId != user.Id && user.MyAnswers.First(a => a.QuestionId == q.Id ) == null )?.ToList();
+            var questions = database.Questions.Where(q => q.UserId != user.Id && user.MyAnswers.FirstOrDefault(a => a.QuestionId == q.Id ) == null )?.ToList();
 
             if(questions == null || questions.Count == 0 )
             {
@@ -34,7 +34,7 @@ namespace answersbot.Services
 
             database.Questions.Add(question);
 
-            var user = database.Users.First(u => u.Id == question.UserId);
+            var user = database.Users.FirstOrDefault(u => u.Id == question.UserId);
             database.Users.Remove(user);
 
             user.MyQuestions.Add(question);

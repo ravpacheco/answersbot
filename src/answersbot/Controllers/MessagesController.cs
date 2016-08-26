@@ -75,7 +75,7 @@ namespace answersbot.Controllers
                         await webClientService.SendMessageAsync(Strings.FallbackMessage, message.From);
 
                         //2 - change user state
-                        await ChangeUserStateAsync(user, Models.SessionState.Starting);
+                        await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
                     }
 
                     break;
@@ -89,7 +89,7 @@ namespace answersbot.Controllers
                     await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
 
                     //3 - change user state
-                    await ChangeUserStateAsync(user, Models.SessionState.Starting);
+                    await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
 
                     break;
                 case Models.SessionState.Answering:
@@ -112,7 +112,7 @@ namespace answersbot.Controllers
                         await webClientService.SendMessageAsync(Strings.ResetMessageByAnswer, message.From);
 
                         //3 - change user state
-                        await ChangeUserStateAsync(user, Models.SessionState.Starting);
+                        await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
                     }
 
                     break;
@@ -181,17 +181,17 @@ namespace answersbot.Controllers
 
         private bool UserWouldLikeQuestion(string message)
         {
-            return Strings.QuestionActionValues.First(q => q.Equals(message.ToLowerInvariant())) != null;
+            return Strings.QuestionActionValues.FirstOrDefault(q => q.Equals(message.ToLowerInvariant())) != null;
         }
 
         private bool UserWouldLikeAnswer(string message)
         {
-            return Strings.AnswerActionValues.First(q => q.Equals(message.ToLowerInvariant())) != null;
+            return Strings.AnswerActionValues.FirstOrDefault(q => q.Equals(message.ToLowerInvariant())) != null;
         }
 
         private bool UserWouldLikeSkipCurrentQuestion(string message)
         {
-            return Strings.SkipQuestionActionValues.First(q => q.Equals(message.ToLowerInvariant())) != null;
+            return Strings.SkipQuestionActionValues.FirstOrDefault(q => q.Equals(message.ToLowerInvariant())) != null;
         }
     }
 }
