@@ -75,7 +75,7 @@ namespace answersbot.Controllers
 
                 await webClientService.SendMessageAsync(mediaLink, Node.Parse(to));
 
-                Thread.Sleep(100);
+                Thread.Sleep(500);
 
                 var select = new Select
                 {
