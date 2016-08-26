@@ -101,10 +101,13 @@ namespace answersbot.Controllers
 
                 };
 
-                await webClientService.SendMessageAsync(select, Node.Parse(to));
+                var nodeTo = Node.Parse(to);
+                await webClientService.SendMessageAsync(select, nodeTo);
+
+                var sponsorUser = await userService.GetUserAsync(new User { Node = nodeTo });
 
                 //2 - change user state
-                await ChangeUserStateAsync(user, Models.SessionState.Answering, "sponsor");
+                await ChangeUserStateAsync(sponsorUser, Models.SessionState.Answering, "sponsor");
 
                 return Ok();
             }
