@@ -272,8 +272,8 @@ namespace answersbot.Controllers
                     {
                         new SelectOption
                         {
-                            Text = Strings.SendAnotherQuestionActionText,
-                            Value = new PlainText {Text = Strings.SkipQuestionActionText}
+                            Order = 1,
+                            Text = Strings.SendAnotherQuestionActionText
                         }
                     }
                 };
