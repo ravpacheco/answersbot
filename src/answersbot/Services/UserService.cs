@@ -42,7 +42,7 @@ namespace answersbot.Services
         {
             var database = DataContext.Database();
 
-            var userEntity = database.Users.First(u => u.Node.Name == user.Node.Name);
+            var userEntity = database.Users.FirstOrDefault(u => u.Node.Name == user.Node.Name);
             database.Users.Remove(userEntity);
 
             if (user.Session != null) { 
@@ -57,7 +57,7 @@ namespace answersbot.Services
         {
             var database = DataContext.Database();
 
-            var userEntity = database.Users.First(u => u.Node.Name == user.Node.Name);
+            var userEntity = database.Users.FirstOrDefault(u => u.Node.Name == user.Node.Name);
             database.Users.Remove(userEntity);
 
             if (answer != null)
