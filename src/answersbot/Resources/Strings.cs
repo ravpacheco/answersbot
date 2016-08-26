@@ -20,12 +20,14 @@ namespace answersbot.Resources
         public static string KeepAnsweringActionText = "Continuar respondendo";
         public static string QuestionClosedActionText = "Pergunta respondida";
         public static string SendAnotherQuestionActionText = "Quero outra pergunta";
-        public static string QuestionActionText = "1 - Perguntar";
+        public static string QuestionActionText = "Perguntar";
         public static string[] QuestionActionValues = { "perguntar", "pergunta", "p", "/perguntar", "/pergunta", "p", "1" };
-        public static string AnswerActionText = "2 - Responder";
+        public static string AnswerActionText = "Responder";
         public static string[] AnswerActionValues = { "responder", "resposta", "r", "/responder", "/responsta", "r", "2" };
         public static string StartActionText = "Começar";
 
+        public static string SkipQuestionActionText = "outra";
         public static string[] SkipQuestionActionValues = { "pular", "outra", "outra pergunta", "quero outra pergunta" };
+        public static string NoQuestionsAvailable = "Parabéns! Você respondeu todas as perguntas disponíveis!";
     }
 }

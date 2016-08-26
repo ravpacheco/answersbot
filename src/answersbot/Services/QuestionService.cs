@@ -27,5 +27,20 @@ namespace answersbot.Services
 
             return questions[rand.Next(0, questions.Count)];
         }
+
+        public async Task<Question> AddQuestionAsync(Question question)
+        {
+            var database = DataContext.Database();
+
+            database.Questions.Add(question);
+
+            var user = database.Users.First(u => u.Id == question.UserId);
+            database.Users.Remove(user);
+
+            user.MyQuestions.Add(question);
+            database.Users.Add(user);
+
+            return question;
+        }
     }
 }
