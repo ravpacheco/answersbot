@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Lime.Protocol;
+using Lime.Protocol.Serialization.Newtonsoft;
+using Newtonsoft.Json;
 
 namespace answersbot.Controllers
 {
@@ -27,14 +29,13 @@ namespace answersbot.Controllers
         // POST api/messages
         public async Task<IHttpActionResult> Post(JObject jsonObject)
         {
-            var envelopeSerializer = new EnvelopeSerializer();
+            var message = JsonConvert.DeserializeObject<Message>(jsonObject.ToString(), JsonNetSerializer.Settings);
 
-            var message = (Message)envelopeSerializer.Deserialize(jsonObject.ToString());
             var messageContent = message.Content.ToString();
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
-            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", message.From);
+            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", Node.Parse("31992125857@0mn.io"));
 
             return Ok();
 
@@ -104,7 +105,7 @@ namespace answersbot.Controllers
                         //2.2 - Send "ResetMessageByAnswer" message
 
                         //3 - change user state
-                        await ChangeUserStateAsync(user, Models.SessionState.Starting);                   
+                        await ChangeUserStateAsync(user, Models.SessionState.Starting);
                     }
 
                     break;

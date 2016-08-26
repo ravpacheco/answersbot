@@ -10,15 +10,22 @@ namespace answersbot.Services
 {
     public class QuestionService
     {
-        public Task<Question> GetRandomQuestion(User user)
+        public async Task<Question> GetRandomQuestion(User user)
         {
             // Get a Question that
             // 1. It is not mine question
-            var database = DataContext.Database();
-
-
             // 2. It is not a question that was answered by me
-            return null;
+            var database = DataContext.Database();
+            var questions = database.Questions.Where(q => q.UserId != user.Id && user.MyAnswers.First(a => a.QuestionId == q.Id ) == null )?.ToList();
+
+            if(questions == null || questions.Count == 0 )
+            {
+                return null;
+            }
+
+            Random rand = new Random();
+
+            return questions[rand.Next(0, questions.Count)];
         }
 
         public async Task<Question> AddQuestionAsync(Question question)
