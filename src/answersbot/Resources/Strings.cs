@@ -10,7 +10,7 @@ namespace answersbot.Resources
         public static string FirstMessage = "Bem vindo! Você pode perguntar ou responder anonimamente, o que deseja ?";
         public static string SendQuestion = "Envie sua pergunta";
 
-        public static string RestartingMessage = "Para perguntar ou responder novamente envie COMEÇAR";
+        public static string RestartingMessage = "Deseja perguntar ou responder novamente?";
         public static string ResetMessageByClosing = "Sua pergunta '{0}' foi encerrada. :)\n" + RestartingMessage;
         public static string ResetMessageByAnswer = "Resposta enviada :)\n" + RestartingMessage;
         public static string ResetMessageByQuestion = "Sua pergunta foi registrada. :)\nEm breve você receberá respostas.\n" + RestartingMessage;

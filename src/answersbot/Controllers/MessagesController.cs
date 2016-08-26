@@ -126,9 +126,9 @@ namespace answersbot.Controllers
                 questionService.CloseQuestion(questionId);
 
                 var question = await questionService.GetQuestionByIdAsync(questionId);
-                await SendTextWithStartOptionAsync(string.Format(Strings.ResetMessageByClosing, question.Content), message.From);
+                await SendInitialMenuAsync(string.Format(Strings.ResetMessageByClosing, question.Content), message.From);
 
-                await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                await ChangeUserStateAsync(user, Models.SessionState.Starting);
                 return Ok();
             }
 
@@ -138,7 +138,7 @@ namespace answersbot.Controllers
                     //Send a initial message and change user state to "Starting"
 
                     //1 - Send a initial message
-                    await SendInitialMenuAsync(message);
+                    await SendInitialMenuAsync(Strings.FirstMessage, message.From);
 
                     //2 - change user state
                     await ChangeUserStateAsync(user, Models.SessionState.Starting);
@@ -193,10 +193,10 @@ namespace answersbot.Controllers
                         if (user.Session.QuestionId == "sponsor")
                         {
                             //2.2 - Send "ResetMessageByAnswer" message
-                            await webClientService.SendMessageAsync(Strings.ResetMessageByAnswer, message.From);
+                            await SendInitialMenuAsync(Strings.ResetMessageByAnswer, message.From);
 
                             //3 - change user state
-                            await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                            await ChangeUserStateAsync(user, Models.SessionState.Starting);
                             break;
                         }
 
@@ -226,10 +226,10 @@ namespace answersbot.Controllers
                         await webClientService.SendMessageAsync(select, questionUser.Node);
 
                         //2.2 - Send "ResetMessageByAnswer" message
-                        await SendTextWithStartOptionAsync(Strings.ResetMessageByAnswer, message.From);
+                        await SendInitialMenuAsync(Strings.ResetMessageByAnswer, message.From);
 
                         //3 - change user state
-                        await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+                        await ChangeUserStateAsync(user, Models.SessionState.Starting);
                     }
 
                     break;
@@ -238,27 +238,11 @@ namespace answersbot.Controllers
             return Ok();
         }
 
-        private async Task SendTextWithStartOptionAsync(string text, Node to)
+        private async Task SendInitialMenuAsync(string text, Node to)
         {
             var select = new Select
             {
                 Text = text,
-                Options = new[]
-                {
-                    new SelectOption
-                    {
-                        Text = Strings.StartActionValues.First()
-                    }
-                }
-            };
-            await webClientService.SendMessageAsync(select, to);
-        }
-
-        private async Task SendInitialMenuAsync(Message message)
-        {
-            var select = new Select
-            {
-                Text = Strings.FirstMessage,
                 Options = new[]
                 {
                     new SelectOption
@@ -273,7 +257,7 @@ namespace answersbot.Controllers
                     }
                 }
             };
-            await webClientService.SendMessageAsync(select, message.From);
+            await webClientService.SendMessageAsync(select, to);
         }
 
         private async Task<Question> SendRandomQuestionOrDefaultMessageAsync(User user, Message message)
@@ -344,10 +328,10 @@ namespace answersbot.Controllers
             await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
 
             //2 - Send "ResetMessageByQuestion" message
-            await SendTextWithStartOptionAsync(Strings.ResetMessageByQuestion, message.From);
+            await SendInitialMenuAsync(Strings.ResetMessageByQuestion, message.From);
 
             //3 - change user state
-            await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
+            await ChangeUserStateAsync(user, Models.SessionState.Starting);
         }
     }
 }
