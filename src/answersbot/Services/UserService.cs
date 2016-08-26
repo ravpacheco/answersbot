@@ -114,7 +114,7 @@ namespace answersbot.Services
         {
             var database = DataContext.Database();
 
-            var userEntity = database.Users.First(u => u.Node.Name == user.Node.Name);
+            var userEntity = database.Users.FirstOrDefault(u => u.Node.Name == user.Node.Name);
             database.Users.Remove(userEntity);
 
             if (user.Session != null)
@@ -124,5 +124,11 @@ namespace answersbot.Services
             }
         }
 
+        public User GetUserByIdAsync(Guid userId)
+        {
+            var database = DataContext.Database();
+
+            return database.Users.FirstOrDefault(u => u.Id == userId);
+        }
     }
 }

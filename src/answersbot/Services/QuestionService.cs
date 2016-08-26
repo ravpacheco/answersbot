@@ -57,5 +57,12 @@ namespace answersbot.Services
 
             return question;
         }
+
+        public Question GetQuestionByIdAsync(string questionId)
+        {
+            var database = DataContext.Database();
+
+            return database.Questions.FirstOrDefault(q => q.Id == questionId);
+        }
     }
 }

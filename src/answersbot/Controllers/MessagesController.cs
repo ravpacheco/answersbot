@@ -113,9 +113,30 @@ namespace answersbot.Controllers
                     else
                     {
                         var questionId = ExtractQuestionIdFromAnswer(messageContent);
+                        var question = questionService.GetQuestionByIdAsync(questionId);
+                        var questionUser = userService.GetUserByIdAsync(question.UserId);
 
                         //2.1 - Send to question's user owner this answer
                         await userService.UpdateUserAnswersAsync(user, new Answer { UserId = user.Id, QuestionId = questionId});
+                        var select = new Select
+                        {
+                            Text = messageContent,
+                            Options = new[]
+                            {
+                                new SelectOption
+                                {
+                                    Text = Strings.KeepAnsweringActionText,
+                                    Value = new PlainText { Text = Strings.KeepAnsweringActionValue }
+                                },
+                                new SelectOption
+                                {
+                                    Text = Strings.QuestionClosedActionText,
+                                    Value = new PlainText { Text = $"{Strings.QuestionClosedActionValue} #{question.Id}#" }
+                                }
+                            }
+
+                        };
+                        await webClientService.SendMessageAsync(select, questionUser.Node);
 
                         //2.2 - Send "ResetMessageByAnswer" message
                         await webClientService.SendMessageAsync(Strings.ResetMessageByAnswer, message.From);
