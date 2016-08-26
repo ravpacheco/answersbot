@@ -48,7 +48,7 @@ namespace answersbot.Controllers
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
-            if (Strings.StartActionValues.Contains(messageContent) && user.Session.State != SessionState.Answering)
+            if (Strings.StartActionValues.Contains(messageContent.ToLower()) && user.Session.State != SessionState.Answering)
             {
                 await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
             }
@@ -126,7 +126,7 @@ namespace answersbot.Controllers
                 questionService.CloseQuestion(questionId);
 
                 var question = await questionService.GetQuestionByIdAsync(questionId);
-                await webClientService.SendMessageAsync(String.Format(Strings.ResetMessageByClosing, question.Content), message.From);
+                await SendTextWithStartOptionAsync(string.Format(Strings.ResetMessageByClosing, question.Content), message.From);
 
                 await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
                 return Ok();
@@ -226,7 +226,7 @@ namespace answersbot.Controllers
                         await webClientService.SendMessageAsync(select, questionUser.Node);
 
                         //2.2 - Send "ResetMessageByAnswer" message
-                        await webClientService.SendMessageAsync(Strings.ResetMessageByAnswer, message.From);
+                        await SendTextWithStartOptionAsync(Strings.ResetMessageByAnswer, message.From);
 
                         //3 - change user state
                         await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
@@ -236,6 +236,22 @@ namespace answersbot.Controllers
             }
 
             return Ok();
+        }
+
+        private async Task SendTextWithStartOptionAsync(string text, Node to)
+        {
+            var select = new Select
+            {
+                Text = text,
+                Options = new[]
+                {
+                    new SelectOption
+                    {
+                        Text = Strings.StartActionValues.First()
+                    }
+                }
+            };
+            await webClientService.SendMessageAsync(select, to);
         }
 
         private async Task SendInitialMenuAsync(Message message)
@@ -328,7 +344,7 @@ namespace answersbot.Controllers
             await questionService.AddQuestionAsync(new Question { Content = message.Content, UserId = user.Id });
 
             //2 - Send "ResetMessageByQuestion" message
-            await webClientService.SendMessageAsync(Strings.ResetMessageByQuestion, message.From);
+            await SendTextWithStartOptionAsync(Strings.ResetMessageByQuestion, message.From);
 
             //3 - change user state
             await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
