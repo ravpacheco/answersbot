@@ -123,10 +123,10 @@ namespace answersbot.Controllers
             var questionId = ExtractQuestionIdFromAnswer(messageContent);
             if (!string.IsNullOrEmpty(questionId))
             {
-                questionService.CloseQuestion(questionId);
-
                 var question = await questionService.GetQuestionByIdAsync(questionId);
                 await SendInitialMenuAsync(string.Format(Strings.ResetMessageByClosing, question.Content), message.From);
+
+                questionService.CloseQuestion(questionId);
 
                 await ChangeUserStateAsync(user, Models.SessionState.Starting);
                 return Ok();

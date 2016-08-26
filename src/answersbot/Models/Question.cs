@@ -9,9 +9,9 @@ namespace answersbot.Models
         public Guid UserId { get; set; }
         public Document Content { get; set; }
 
-        public Question()
+        public Question(string id = null)
         {
-            Id = Guid.NewGuid().ToString().Substring(0, 5);
+            Id = id ?? Guid.NewGuid().ToString().Substring(0, 5);
         }
     }
 }
