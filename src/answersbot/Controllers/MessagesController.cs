@@ -48,6 +48,11 @@ namespace answersbot.Controllers
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
+            if(Strings.KeepAnsweringActionValue == messageContent.ToLower())
+            {
+                return Ok();
+            }
+
             if (Strings.StartActionValues.Contains(messageContent.ToLower()) && user.Session.State != SessionState.Answering)
             {
                 await ChangeUserStateAsync(user, Models.SessionState.FirstAccess);
@@ -56,7 +61,6 @@ namespace answersbot.Controllers
             if (SponsorCommand(messageContent))
             {
                 var to = messageContent.Split(' ')[1];
-                //TODO: Change to Document
 
                 var mediaLink = new MediaLink
                 {
