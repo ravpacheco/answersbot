@@ -19,7 +19,7 @@ namespace answersbot.Controllers
             webClientService = new WebClientService();
         }
 
-        // POST api/values
+        // POST api/messages
         public async Task Post(JObject jsonObject)
         {
             var envelopeSerializer = new EnvelopeSerializer();
@@ -28,7 +28,7 @@ namespace answersbot.Controllers
 
             var user = await userService.GetUserAsync(new User { Node = message.From });
 
-            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem");
+            await webClientService.SendMessageAsync("Oi. Recebi sua mensagem", message.From);
 
             switch (user.Session.State)
             {

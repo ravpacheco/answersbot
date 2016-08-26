@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -20,16 +19,21 @@ namespace answersbot.Services
 
         private AuthenticationHeaderValue AuthorizationHeader { get; set; }
 
-        public async Task<HttpResponseMessage> SendMessageAsync(string payload, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpResponseMessage> SendMessageAsync(string payload, Node to, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await SendMessageAsync(new PlainText { Text = payload }, cancellationToken);
+            return await SendMessageAsync(new PlainText { Text = payload }, to, cancellationToken);
         }
 
-        public async Task<HttpResponseMessage> SendMessageAsync<T>(T payload, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpResponseMessage> SendMessageAsync<T>(T payload, Node to, CancellationToken cancellationToken = default(CancellationToken))
             where T : Document
         {
-            SetAuthorization(new AuthenticationHeaderValue("Token", "cmF2cGFjaGVjb0BnbWFpbC5jb206bVI0ZjQzbGFwMQ=="));
-            return await SendAsync(Uri, HttpMethod.Post, payload, cancellationToken);
+            SetAuthorization(new AuthenticationHeaderValue("Basic", "cmF2cGFjaGVjb0BnbWFpbC5jb206bVI0ZjQzbGFwMQ=="));
+            return await SendAsync(Uri, HttpMethod.Post, new Message {
+                Id = Guid.NewGuid().ToString(),
+                Content = payload,
+                From = Node.Parse("answersbot@msging.net"),
+                To = to
+            }, cancellationToken);
         }
 
         private void SetAuthorization(AuthenticationHeaderValue header)
