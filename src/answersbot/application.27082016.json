@@ -1,0 +1,199 @@
+﻿{
+    "identifier": "answersbot2",
+    "accessKey": "",
+    "messageReceivers": [
+        {
+            "priority": 1,
+            "response": {
+                "mediaType": "text/plain",
+                "plainContent": "Desculpe, não entendi!"
+            }
+        },
+        {
+            "state": "default",
+            "outState": "starting",
+            "mediaType": "text/plain",
+            "content": "^(começar|oi|iniciar|/start)$",
+            "response": {
+                "mediaType": "application/vnd.lime.select+json",
+                "jsonContent": {
+                    "scope": "immediate",
+                    "text": "Bem vindo! Você pode perguntar ou responder anonimamente, o que deseja?",
+                    "options": [
+                        {
+                            "text": "Perguntar",
+                            "order": 1
+                        },
+                        {
+                            "text": "Responder",
+                            "order": 2
+                        },
+                        {
+                            "text": "Cancelar",
+                            "order": 3
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "state": "starting",
+            "outState": "questioning",
+            "mediaType": "text/plain",
+            "content": "^(1|perguntar|p)$",
+            "response": {
+                "mediaType": "text/plain",
+                "plainContent": "Envie sua pergunta!"
+            }
+        },
+        {
+            "state": "questioning",
+            "outState": "starting",
+            "mediaType": "text/plain",
+            "type": "SaveQuestion"
+        },
+        {
+            "state": "questioning",
+            "outState": "starting",
+            "mediaType": "text/plain",
+            "response": {
+                "mediaType": "application/vnd.lime.select+json",
+                "jsonContent": {
+                    "scope": "immediate",
+                    "text": "Sua pergunta foi salva! Deseja fazer outra pergunta?",
+                    "options": [
+                        {
+                            "text": "Perguntar",
+                            "order": 1
+                        },
+                        {
+                            "text": "Responder",
+                            "order": 2
+                        },
+                        {
+                            "text": "Cancelar",
+                            "order": 3
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "state": "starting",
+            "outState": "answering",
+            "mediaType": "text/plain",
+            "content": "^(2|responder|r)$",
+            "type": "SendRandomQuestion"
+        },
+        {
+            "state": "answering",
+            "mediaType": "text/plain",
+            "content": "^(1|outra|o)$",
+            "type": "SendRandomQuestion"
+        },
+        {
+            "state": "answering",
+            "outState": "starting",
+            "mediaType": "text/plain",
+            "type": "SaveAnswer"
+        },
+        {
+            "state": "answering",
+            "outState": "starting",
+            "mediaType": "text/plain",
+            "response": {
+                "mediaType": "application/vnd.lime.select+json",
+                "jsonContent": {
+                    "scope": "immediate",
+                    "text": "Sua resposta foi salva! Deseja responder outra pergunta?",
+                    "options": [
+                        {
+                            "text": "Perguntar",
+                            "order": 1
+                        },
+                        {
+                            "text": "Responder",
+                            "order": 2
+                        },
+                        {
+                            "text": "Cancelar",
+                            "order": 3
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "state": "receiving",
+            "outState": "default",
+            "mediaType": "text/plain",
+            "content": "^([1..9]*)$",
+            "response": {
+                "mediaType": "text/plain",
+                "plainContent": "Você não receberá mais respostas para esta pergunta."
+            }
+        },
+        {
+            "state": "receiving",
+            "outState": "default",
+            "mediaType": "text/plain",
+            "content": "^([1..9]*)$",
+            "type": "CloseQuestion"
+        },
+        {
+            "state": "receiving",
+            "outState": "default",
+            "mediaType": "text/plain",
+            "content": "^(0|continuar|c)$",
+            "response": {
+                "mediaType": "text/plain",
+                "plainContent": "Você ainda poderá receber respostas para esta pergunta."
+            }
+        },
+        {
+            "state": "starting",
+            "outState": "default",
+            "mediaType": "text/plain",
+            "content": "^(3|cancelar|c)$",
+            "response": {
+                "mediaType": "text/plain",
+                "plainContent": "Obrigado! Volte sempre que quiser."
+            }
+        },
+        {
+            "outState": "default",
+            "mediaType": "text/plain",
+            "content": "^(sair|cancelar|/sair/exit)$",
+            "type": "CancelAllQuestions"
+        },
+        {
+            "outState": "default",
+            "mediaType": "text/plain",
+            "content": "^(sair|cancelar|/sair/exit)$",
+            "response": {
+                "mediaType": "text/plain",
+                "plainContent": "Desculpe o incomodo. Você não receberá mais respostas a partir de agora."
+            }
+        }
+    ],
+    "settings": {
+        "congratulations": "Parabéns! Você respondeu todas as perguntas. Volte mais tarde se quiser.",
+        "closureOptions": {
+            "scope": "immediate",
+            "text": "Pergunta: {0}\nResposta: {0}\nDeseja responder outra pergunta?",
+            "options": [
+                {
+                    "text": "Pergunta respondida"
+                },
+                {
+                    "text": "Continuar",
+                    "order": 1
+                }
+            ]
+        }
+
+    },
+    "settingsType": "Settings",
+    "startupType": "Startup",
+    "schemaVersion": 2
+}
