@@ -127,7 +127,7 @@
             "state": "receiving",
             "outState": "default",
             "mediaType": "text/plain",
-            "content": "^([1..9]*)$",
+            "content": "^([1-9]*)$",
             "response": {
                 "mediaType": "text/plain",
                 "plainContent": "Você não receberá mais respostas para esta pergunta."
@@ -137,7 +137,7 @@
             "state": "receiving",
             "outState": "default",
             "mediaType": "text/plain",
-            "content": "^([1..9]*)$",
+            "content": "^([1-9]*)$",
             "type": "CloseQuestion"
         },
         {
