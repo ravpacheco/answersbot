@@ -32,8 +32,16 @@ namespace answersbot.Storage
 
             return _database;
         }
-        
+
         private void PopulateDataBase()
+        {
+            //CreateNewQuestion("1414594858555994@messenger.gw.msging.net", "O que é IxDA para você?", "aaaaa");
+            CreateNewQuestion("961341567311631@messenger.gw.msging.net", "O que é IxDA para você?", "aaaaa");
+            CreateNewQuestion("961341567311631@messenger.gw.msging.net", "O que é Design Thinking? ", "bbbbb");
+            CreateNewQuestion("961341567311631@messenger.gw.msging.net", "Qual designer te inspira e por que?", "ccccc");
+        }
+
+        private void OldPopulateDataBase()
         {
             CreateNewQuestion("225323721@telegram.gw.msging.net", "Qual o melhor site para comprar eletrônicos?");
             CreateNewQuestion("5531992154087@0mn.io", "Por que kamikazes usam capacetes?");

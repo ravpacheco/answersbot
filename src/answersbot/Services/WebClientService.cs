@@ -16,7 +16,7 @@ namespace answersbot.Services
 {
     public class WebClientService
     {
-        private readonly Uri Uri = new Uri("http://api.messaginghub.io/applications/botrespostas/messages");
+        private readonly Uri Uri = new Uri("https://msging.net/messages");
 
         private AuthenticationHeaderValue AuthorizationHeader { get; set; }
 
@@ -28,7 +28,7 @@ namespace answersbot.Services
         public async Task<HttpResponseMessage> SendMessageAsync<T>(T document, Node to, CancellationToken cancellationToken = default(CancellationToken))
             where T : Document
         {
-            SetAuthorization(new AuthenticationHeaderValue("Basic", "cmF2cGFjaGVjb0BnbWFpbC5jb206bVI0ZjQzbGFwMQ=="));
+            SetAuthorization(new AuthenticationHeaderValue("Key", "aXhkYWJocXVpemJvdDpGN2VsaW0ya3Vpc0FQNFhWT0pHbg=="));
             var message = new Message
             {
                 Id = Guid.NewGuid().ToString(),
